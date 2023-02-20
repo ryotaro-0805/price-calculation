@@ -35,7 +35,7 @@ export default function Home() {
         } else {
           setSelectContent((inContent:any) => [...inContent, '選択されていません！']);
           setSelectPrice((inPrice:any) => [...inPrice, 0])
-          setMissCheck((e) => e + 1);
+          setMissCheck((e:any) => e + 1);
         }
       }
     }
@@ -79,7 +79,7 @@ export default function Home() {
               <input onChange={switchDisable} type="checkbox" name="" id="" />
               <span>{article.name}-</span>
               <span>{article.price}</span>
-              <select name={article.name} id={index} disabled>
+              <select name={article.name} disabled>
                 <option value="">選択してください</option>
                 <option value="100">100g</option>
                 <option value="200">200g</option>
