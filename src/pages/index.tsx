@@ -15,7 +15,7 @@ export default function Home() {
   const [selectName, setSelectName] = useState<any>(['']);
   const [selectPrice, setSelectPrice] = useState<any>(['']);
   const [selectContent, setSelectContent] = useState<any>(['']);
-  const [missChech, setMissCheck] = useState<number>(0);
+  const [missChech, setMissCheck] = useState<any>(0);
   const [sumPrice, setSumPrice] = useState<any>('');
 
   const submit = () => {
