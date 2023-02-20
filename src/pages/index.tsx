@@ -2,10 +2,66 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import { useEffect, useRef, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+  const articles = [{ name: 'first', price: 300 }, { name: 'second', price: 400 }, { name: 'third', price: 600 }]
+  const ref = useRef();
+  const button = useRef();
+
+  const [selectName, setSelectName] = useState([]);
+  const [selectPrice, setSelectPrice] = useState([]);
+  const [selectContent, setSelectContent] = useState([]);
+  const [missChech, setMissCheck] = useState();
+  const [sumPrice, setSumPrice] = useState();
+
+  const submit = () => {
+    console.log('clicked!');
+    setSelectName([]);
+    setSelectContent([]);
+    setSelectPrice([]);
+    setMissCheck(0);
+
+    for (let i = 0; i <= arguments.length; i++) {
+      if (ref.current[i * 2].checked) {
+        setSelectName((indata) => [...indata, articles[i].name]);
+        if (!(ref.current[i * 2 + 1].value.length === 0)) {
+          setSelectContent((inContent) => [...inContent, ref.current[i * 2 + 1].value]);
+          setSelectPrice((inPrice) => [...inPrice, articles[i].price * ref.current[i * 2 + 1].value * 0.01]);
+        } else {
+          setSelectContent((inContent) => [...inContent, '選択されていません！']);
+          setSelectPrice((inPrice) => [...inPrice, 0])
+          setMissCheck((e) => e + 1);
+        }
+      }
+    }
+    setSumPrice();
+  }
+
+  const switchDisable = () => {
+    for (let i = 0; i < ref.current.length; i += 2) {
+      ref.current[i].checked && (ref.current[i + 1].disabled = false)
+      !ref.current[i].checked && (ref.current[i + 1].disabled = true)
+      !ref.current[i].checked && (ref.current[i + 1].value = '')
+    }
+    checkCHeckBox();
+  }
+  
+  const [checker,setChecker]=useState(0);
+  const checkCHeckBox=()=>{
+    setChecker(0);
+    ref.current[0].checked && setChecker((inData)=>inData+1); 
+    ref.current[2].checked && setChecker((inData)=>inData+1); 
+    ref.current[4].checked && setChecker((inData)=>inData+1); 
+  }
+  
+  useEffect(()=>{
+    checker>0 ? (button.current.disabled=false):(button.current.disabled=true);
+  },[checker]);
+  
   return (
     <>
       <Head>
@@ -14,110 +70,37 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
+      <div>
+      <div>
+        <form action="" ref={ref}>
+          {articles.map((article, index) => (
+            <div key={index}>
+              <input onChange={switchDisable} type="checkbox" name="" id="" />
+              <span>{article.name}-</span>
+              <span>{article.price}</span>
+              <select name={article.name} id={index} disabled>
+                <option value="">選択してください</option>
+                <option value="100">100g</option>
+                <option value="200">200g</option>
+                <option value="300">300g</option>
+              </select>
+            </div>
+          ))}
+        </form>
+      </div>
+      <p>銘柄</p>
+      {selectName.map((name, index) => (
+        <div key={index}>
+          <span>{name}-</span>
+          <span>{selectContent[index]}g=</span>
+          <span>{selectPrice[index]}円</span>
         </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+      ))}
+      <p>合計:{sumPrice}</p>
+      <button ref={button} onClick={submit}>決定</button>
+      {(missChech < 1) && (selectName.length>0) ? <p>最終画面へ</p> : <p>選択を確認してください。</p>}
+      {/* {(selectName.length>0) ? <p>最終画面へ</p> : } */}
+    </div>
     </>
   )
 }
