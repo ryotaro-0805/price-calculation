@@ -9,36 +9,37 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const articles = [{ name: 'first', price: 300 }, { name: 'second', price: 400 }, { name: 'third', price: 600 }]
-  const ref = useRef();
-  const button = useRef();
+  const ref = useRef<any>();
+  const button = useRef<any>();
 
-  const [selectName, setSelectName] = useState([]);
-  const [selectPrice, setSelectPrice] = useState([]);
-  const [selectContent, setSelectContent] = useState([]);
-  const [missChech, setMissCheck] = useState();
-  const [sumPrice, setSumPrice] = useState();
+  const [selectName, setSelectName] = useState<any>(['']);
+  const [selectPrice, setSelectPrice] = useState<any>(['']);
+  const [selectContent, setSelectContent] = useState<any>(['']);
+  const [missChech, setMissCheck] = useState<number>(0);
+  const [sumPrice, setSumPrice] = useState<any>('');
 
   const submit = () => {
-    console.log('clicked!');
     setSelectName([]);
-    setSelectContent([]);
+    setSelectContent(['']);
     setSelectPrice([]);
     setMissCheck(0);
 
-    for (let i = 0; i <= arguments.length; i++) {
+    // for (let i = 0; i <= arguments.length; i++) {
+      // console.log(arguments.length);
+    for (let i = 0; i <= 2; i++) {
       if (ref.current[i * 2].checked) {
-        setSelectName((indata) => [...indata, articles[i].name]);
+        setSelectName((indata:any) => [...indata, articles[i].name]);
         if (!(ref.current[i * 2 + 1].value.length === 0)) {
-          setSelectContent((inContent) => [...inContent, ref.current[i * 2 + 1].value]);
-          setSelectPrice((inPrice) => [...inPrice, articles[i].price * ref.current[i * 2 + 1].value * 0.01]);
+          setSelectContent((inContent:any) => [...inContent, ref.current[i * 2 + 1].value]);
+          setSelectPrice((inPrice:any) => [...inPrice, articles[i].price * ref.current[i * 2 + 1].value * 0.01]);
         } else {
-          setSelectContent((inContent) => [...inContent, '選択されていません！']);
-          setSelectPrice((inPrice) => [...inPrice, 0])
+          setSelectContent((inContent:any) => [...inContent, '選択されていません！']);
+          setSelectPrice((inPrice:any) => [...inPrice, 0])
           setMissCheck((e) => e + 1);
         }
       }
     }
-    setSumPrice();
+    setSumPrice('');
   }
 
   const switchDisable = () => {
@@ -89,7 +90,7 @@ export default function Home() {
         </form>
       </div>
       <p>銘柄</p>
-      {selectName.map((name, index) => (
+      {selectName.map((name:any, index:number) => (
         <div key={index}>
           <span>{name}-</span>
           <span>{selectContent[index]}g=</span>
