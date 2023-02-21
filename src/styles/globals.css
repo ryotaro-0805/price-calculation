@@ -1,3 +1,14 @@
-form,select,p{
+form,select,p,button{
     font-size: 1.2rem;
+    margin: 20px 10px;
+}
+
+select{
+    font-size: 16px;
+    width: 150px;
+}
+
+.name{
+    display: inline-block;
+    width: 80px;
 }

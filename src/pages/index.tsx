@@ -14,7 +14,7 @@ export default function Home() {
 
   const [selectName, setSelectName] = useState<any>(['']);
   const [missChech, setMissCheck] = useState<any>(0);
-  const [sumPrice, setSumPrice] = useState<any>('');
+  const [sumPrice, setSumPrice] = useState<any>(0);
 
   const [getData, setGetData] = useState<any>([]);
 
@@ -70,7 +70,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    setSumPrice('');
+    setSumPrice(0);
     getData.map((data:any)=>{
       setSumPrice((inData:any)=>Number(inData)+Number(data.price)*Number(data.content)*0.01);
     });
@@ -91,7 +91,7 @@ export default function Home() {
               <div key={index}>
                 <label htmlFor={index}>
                 <input onChange={(e:any)=>{switchDisable(e);}} type="checkbox" name='' id={index} />
-                <span>{article.name}-</span>
+                <span className='name'>{article.name}-</span>
                 <span>{article.price}円 </span>
                 </label>
                 <select onChange={() => getSizer()} ref={sizeRef} name={article.name} disabled>
