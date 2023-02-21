@@ -96,7 +96,7 @@ export default function Home() {
               <div key={index}>
                 <label htmlFor={index}>
                   <input onChange={(e: any) => { switchDisable(e); }} type="checkbox" name='' id={index} />
-                  <span className='name'>{article.name}-</span>
+                  <span className='name'>{article.name}</span>
                   <span>{article.price}円 </span>
                 </label>
                 <select onChange={() => getSizer()} ref={sizeRef} name={article.name} disabled>
@@ -112,7 +112,7 @@ export default function Home() {
         <p>商品</p>
         {getData.map((data: any, index: number) => (
           <div key={index}>
-            <p>{data.name}-{data.price}円　{data.content}グラム</p>
+            <p><span className='name'>{data.name}</span>{data.price}円　{data.content}グラム</p>
           </div>
         ))}
         <p>合計:{sumPrice}円</p>
