@@ -87,7 +87,7 @@ export default function Home() {
       <div>
         <div>
           <form action="" ref={ref}>
-            {articles.map((article, index) => (
+            {articles.map((article, index:any) => (
               <div key={index}>
                 <label htmlFor={index}>
                 <input onChange={(e:any)=>{switchDisable(e);}} type="checkbox" name='' id={index} />
