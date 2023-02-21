@@ -89,9 +89,11 @@ export default function Home() {
           <form action="" ref={ref}>
             {articles.map((article, index) => (
               <div key={index}>
-                <input onChange={(e:any)=>{switchDisable(e);}} type="checkbox" name="" id="" />
+                <label htmlFor={index}>
+                <input onChange={(e:any)=>{switchDisable(e);}} type="checkbox" name='' id={index} />
                 <span>{article.name}-</span>
                 <span>{article.price}円 </span>
+                </label>
                 <select onChange={() => getSizer()} ref={sizeRef} name={article.name} disabled>
                   <option value="">選択してください</option>
                   <option value="100">100g</option>
