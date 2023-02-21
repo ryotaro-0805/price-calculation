@@ -104,7 +104,7 @@ export default function Home() {
             ))}
           </form>
         </div>
-        <p>銘柄</p>
+        <p>商品</p>
           {getData.map((data:any,index:number) => (
         <div key={index}>
         <p>{data.name}-{data.price}円　{data.content}グラム</p>
