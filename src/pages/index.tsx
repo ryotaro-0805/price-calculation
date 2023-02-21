@@ -1,48 +1,40 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
 import { useEffect, useRef, useState } from 'react'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-  const articles = [{ name: 'first', price: 300 }, { name: 'second', price: 400 }, { name: 'third', price: 600 }]
+  const articles = [
+    { name: 'first', price: 300 },
+    { name: 'second', price: 400 },
+    { name: 'third', price: 600 },
+    { name: 'forth', price: 800 }]
   const ref = useRef<any>();
   const button = useRef<any>();
+  const sizeRef = useRef<any>();
 
   const [selectName, setSelectName] = useState<any>(['']);
-  const [selectPrice, setSelectPrice] = useState<any>(['']);
-  const [selectContent, setSelectContent] = useState<any>(['']);
   const [missChech, setMissCheck] = useState<any>(0);
   const [sumPrice, setSumPrice] = useState<any>('');
 
+  const [getData, setGetData] = useState<any>([]);
+
   const submit = () => {
-    setSelectName([]);
-    setSelectContent(['']);
-    setSelectPrice([]);
+    setSelectName(['']);
     setMissCheck(0);
 
-    // for (let i = 0; i <= arguments.length; i++) {
-      // console.log(arguments.length);
-    for (let i = 0; i <= 2; i++) {
+    for (let i = 0; i < articles.length; i++) {
       if (ref.current[i * 2].checked) {
-        setSelectName((indata:any) => [...indata, articles[i].name]);
+        setSelectName((indata: any) => [...indata, articles[i].name]);
         if (!(ref.current[i * 2 + 1].value.length === 0)) {
-          setSelectContent((inContent:any) => [...inContent, ref.current[i * 2 + 1].value]);
-          setSelectPrice((inPrice:any) => [...inPrice, articles[i].price * ref.current[i * 2 + 1].value * 0.01]);
         } else {
-          setSelectContent((inContent:any) => [...inContent, '選択されていません！']);
-          setSelectPrice((inPrice:any) => [...inPrice, 0])
-          setMissCheck((e:any) => e + 1);
+          setMissCheck((e: any) => e + 1);
         }
       }
     }
-    setSumPrice('');
   }
 
-  const switchDisable = () => {
+  const switchDisable = (e) => {
+    if (!e.target.checked) getSizer();
     for (let i = 0; i < ref.current.length; i += 2) {
       ref.current[i].checked && (ref.current[i + 1].disabled = false)
       !ref.current[i].checked && (ref.current[i + 1].disabled = true)
@@ -50,19 +42,40 @@ export default function Home() {
     }
     checkCHeckBox();
   }
-  
-  const [checker,setChecker]=useState(0);
-  const checkCHeckBox=()=>{
+
+  const [checker, setChecker] = useState(0);
+  const checkCHeckBox = () => {
     setChecker(0);
-    ref.current[0].checked && setChecker((inData)=>inData+1); 
-    ref.current[2].checked && setChecker((inData)=>inData+1); 
-    ref.current[4].checked && setChecker((inData)=>inData+1); 
+    ref.current[0].checked && setChecker((inData) => inData + 1);
+    ref.current[2].checked && setChecker((inData) => inData + 1);
+    ref.current[4].checked && setChecker((inData) => inData + 1);
   }
-  
-  useEffect(()=>{
-    checker>0 ? (button.current.disabled=false):(button.current.disabled=true);
-  },[checker]);
-  
+
+  useEffect(() => {
+    checker > 0 ? (button.current.disabled = false) : (button.current.disabled = true);
+  }, [checker]);
+
+  const getSizer:any = () => {
+    setGetData([]);
+    for (let i = 0; i < articles.length; i++) {
+      if ((ref.current[i * 2].checked)&&((ref.current[i * 2 + 1].value))) {
+        setGetData((data:any) => [...data,
+        { name: articles[i].name,
+          price: articles[i].price,
+          content: ref.current[i * 2 + 1].value
+        }
+        ]);
+      }
+    }
+  }
+
+  useEffect(() => {
+    setSumPrice('');
+    getData.map((data:any)=>{
+      setSumPrice((inData:any)=>Number(inData)+Number(data.price)*Number(data.content)*0.01);
+    });
+  }, [getData]);
+
   return (
     <>
       <Head>
@@ -72,36 +85,33 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-      <div>
-        <form action="" ref={ref}>
-          {articles.map((article, index) => (
-            <div key={index}>
-              <input onChange={switchDisable} type="checkbox" name="" id="" />
-              <span>{article.name}-</span>
-              <span>{article.price}</span>
-              <select name={article.name} disabled>
-                <option value="">選択してください</option>
-                <option value="100">100g</option>
-                <option value="200">200g</option>
-                <option value="300">300g</option>
-              </select>
-            </div>
-          ))}
-        </form>
-      </div>
-      <p>銘柄</p>
-      {selectName.map((name:any, index:number) => (
+        <div>
+          <form action="" ref={ref}>
+            {articles.map((article, index) => (
+              <div key={index}>
+                <input onChange={(e)=>{switchDisable(e);}} type="checkbox" name="" id="" />
+                <span>{article.name}-</span>
+                <span>{article.price}円 </span>
+                <select onChange={() => getSizer()} ref={sizeRef} name={article.name} disabled>
+                  <option value="">選択してください</option>
+                  <option value="100">100g</option>
+                  <option value="200">200g</option>
+                  <option value="300">300g</option>
+                </select>
+              </div>
+            ))}
+          </form>
+        </div>
+        <p>銘柄</p>
+          {getData.map((data:any,index:number) => (
         <div key={index}>
-          <span>{name}-</span>
-          <span>{selectContent[index]}g=</span>
-          <span>{selectPrice[index]}円</span>
+        <p>{data.name}-{data.price}円　{data.content}グラム</p>
         </div>
       ))}
-      <p>合計:{sumPrice}</p>
-      <button ref={button} onClick={submit}>決定</button>
-      {(missChech < 1) && (selectName.length>0) ? <p>最終画面へ</p> : <p>選択を確認してください。</p>}
-      {/* {(selectName.length>0) ? <p>最終画面へ</p> : } */}
-    </div>
+        <p>合計:{sumPrice}円</p>
+        <button ref={button} onClick={submit}>決定</button>
+        {(missChech < 1) && (selectName.length > 0) ? <p>最終画面へ</p> : <p>選択を確認してください。</p>}
+      </div>
     </>
   )
 }
