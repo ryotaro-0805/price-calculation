@@ -7,7 +7,9 @@ export default function Home() {
     { name: 'first', price: 300 },
     { name: 'second', price: 400 },
     { name: 'third', price: 600 },
-    { name: 'forth', price: 800 }]
+    { name: 'forth', price: 800 }
+  ]
+
   const ref = useRef<any>();
   const button = useRef<any>();
   const sizeRef = useRef<any>();
@@ -15,8 +17,8 @@ export default function Home() {
   const [selectName, setSelectName] = useState<any>(['']);
   const [missChech, setMissCheck] = useState<any>(0);
   const [sumPrice, setSumPrice] = useState<any>(0);
-
   const [getData, setGetData] = useState<any>([]);
+  const [checker, setChecker] = useState(0);
 
   const submit = () => {
     setSelectName(['']);
@@ -33,34 +35,37 @@ export default function Home() {
     }
   }
 
-  const switchDisable = (e:any) => {
+  const switchDisable = (e: any) => {
     if (!e.target.checked) getSizer();
     for (let i = 0; i < ref.current.length; i += 2) {
-      ref.current[i].checked && (ref.current[i + 1].disabled = false)
-      !ref.current[i].checked && (ref.current[i + 1].disabled = true)
-      !ref.current[i].checked && (ref.current[i + 1].value = '')
+      if (ref.current[i].checked) {
+        ref.current[i + 1].disabled = false;
+      } else {
+        ref.current[i + 1].disabled = true;
+        ref.current[i + 1].value = ''
+      }
     }
     checkCHeckBox();
   }
 
-  const [checker, setChecker] = useState(0);
   const checkCHeckBox = () => {
     setChecker(0);
-    ref.current[0].checked && setChecker((inData) => inData + 1);
-    ref.current[2].checked && setChecker((inData) => inData + 1);
-    ref.current[4].checked && setChecker((inData) => inData + 1);
+    for (let i = 0; i < articles.length; i++) {
+      ref.current[i * 2].checked && setChecker((inData) => inData + 1);
+    }
   }
 
   useEffect(() => {
     checker > 0 ? (button.current.disabled = false) : (button.current.disabled = true);
   }, [checker]);
 
-  const getSizer:any = () => {
+  const getSizer: any = () => {
     setGetData([]);
     for (let i = 0; i < articles.length; i++) {
-      if ((ref.current[i * 2].checked)&&((ref.current[i * 2 + 1].value))) {
-        setGetData((data:any) => [...data,
-        { name: articles[i].name,
+      if ((ref.current[i * 2].checked) && ((ref.current[i * 2 + 1].value))) {
+        setGetData((data: any) => [...data,
+        {
+          name: articles[i].name,
           price: articles[i].price,
           content: ref.current[i * 2 + 1].value
         }
@@ -71,8 +76,8 @@ export default function Home() {
 
   useEffect(() => {
     setSumPrice(0);
-    getData.map((data:any)=>{
-      setSumPrice((inData:any)=>Number(inData)+Number(data.price)*Number(data.content)*0.01);
+    getData.map((data: any) => {
+      setSumPrice((inData: any) => Number(inData) + Number(data.price) * Number(data.content) * 0.01);
     });
   }, [getData]);
 
@@ -87,12 +92,12 @@ export default function Home() {
       <div>
         <div>
           <form action="" ref={ref}>
-            {articles.map((article, index:any) => (
+            {articles.map((article, index: any) => (
               <div key={index}>
                 <label htmlFor={index}>
-                <input onChange={(e:any)=>{switchDisable(e);}} type="checkbox" name='' id={index} />
-                <span className='name'>{article.name}-</span>
-                <span>{article.price}円 </span>
+                  <input onChange={(e: any) => { switchDisable(e); }} type="checkbox" name='' id={index} />
+                  <span className='name'>{article.name}-</span>
+                  <span>{article.price}円 </span>
                 </label>
                 <select onChange={() => getSizer()} ref={sizeRef} name={article.name} disabled>
                   <option value="">選択してください</option>
@@ -105,11 +110,11 @@ export default function Home() {
           </form>
         </div>
         <p>商品</p>
-          {getData.map((data:any,index:number) => (
-        <div key={index}>
-        <p>{data.name}-{data.price}円　{data.content}グラム</p>
-        </div>
-      ))}
+        {getData.map((data: any, index: number) => (
+          <div key={index}>
+            <p>{data.name}-{data.price}円　{data.content}グラム</p>
+          </div>
+        ))}
         <p>合計:{sumPrice}円</p>
         <button ref={button} onClick={submit}>決定</button>
         {(missChech < 1) && (selectName.length > 0) ? <p>最終画面へ</p> : <p>選択を確認してください。</p>}
