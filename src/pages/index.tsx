@@ -33,7 +33,7 @@ export default function Home() {
     }
   }
 
-  const switchDisable = (e) => {
+  const switchDisable = (e:any) => {
     if (!e.target.checked) getSizer();
     for (let i = 0; i < ref.current.length; i += 2) {
       ref.current[i].checked && (ref.current[i + 1].disabled = false)
@@ -89,7 +89,7 @@ export default function Home() {
           <form action="" ref={ref}>
             {articles.map((article, index) => (
               <div key={index}>
-                <input onChange={(e)=>{switchDisable(e);}} type="checkbox" name="" id="" />
+                <input onChange={(e:any)=>{switchDisable(e);}} type="checkbox" name="" id="" />
                 <span>{article.name}-</span>
                 <span>{article.price}円 </span>
                 <select onChange={() => getSizer()} ref={sizeRef} name={article.name} disabled>
